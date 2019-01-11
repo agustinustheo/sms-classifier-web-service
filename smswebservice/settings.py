@@ -25,7 +25,7 @@ SECRET_KEY = '6ekv+i86bl7i=r0j4yp(lw*dzp*9w^v4b$v47ckf&t91qxc^_t'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', 'sms-classify-web-api.herokuapp.com']
 
 
 # Application definition
