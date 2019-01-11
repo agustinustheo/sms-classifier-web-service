@@ -1,11 +1,11 @@
 import os
 import re
 import pickle
-from django.conf import settings
+from smswebservice.settings import STATIC_ROOT
 from django.http import HttpResponse
 from nltk.tokenize import word_tokenize
-APP_ROOT = os.path.dirname(os.path.abspath(__file__))
-PICKLE_FOLDER = APP_ROOT + '\\sms_classifier_pickle\\'
+APP_ROOT = os.path.join(STATIC_ROOT)
+PICKLE_FOLDER = os.path.join(APP_ROOT, 'sms_classifier_pickle')
 
 def classify_text(request):
     to_be_classified = request.GET.get('string')
@@ -44,7 +44,7 @@ def classify_text(request):
         return processed
 
     #Open word features
-    word_features_f = open(PICKLE_FOLDER + "word_features.pickle", "rb")
+    word_features_f = open(os.path.join(PICKLE_FOLDER , "word_features.pickle"), "rb")
     word_features = pickle.load(word_features_f)
     word_features_f.close()
 
@@ -57,7 +57,7 @@ def classify_text(request):
 
         return features
 
-    classifier_s = open(PICKLE_FOLDER + "sms_classifier.pickle", "rb")
+    classifier_s = open(os.path.join(PICKLE_FOLDER , "sms_classifier.pickle"), "rb")
     sms_classifier = pickle.load(classifier_s)
     classifier_s.close()
 
