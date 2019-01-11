@@ -6,7 +6,8 @@ from nltk.tokenize import word_tokenize
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 PICKLE_FOLDER = APP_ROOT + '\\sms_classifier_pickle\\'
 
-def classify_text(req):
+def classify_text(request):
+    to_be_classified = request.GET.get('string')
     def preproccess_text(text_messages):
         # change words to lower case - Hello, HELLO, hello are all the same word
         processed = text_messages.lower()
@@ -59,7 +60,7 @@ def classify_text(req):
     sms_classifier = pickle.load(classifier_s)
     classifier_s.close()
 
-    classified_text = sms_classifier.classify(find_features(preproccess_text('''Hello is it me you\'re looking for? I can see it in your eyes. I can see it in your smile''')))
+    classified_text = sms_classifier.classify(find_features(preproccess_text(to_be_classified)))
     if classified_text == 0:
         classified_text = "normal"
     elif classified_text == 1:
