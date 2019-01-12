@@ -115,7 +115,7 @@ def classify_text(request):
     spam_msg = 0
 
     for name in names:
-        classifier_s = open(os.path.join(PICKLE_FOLDER , name + ' Classifier.pickle', "rb")
+        classifier_s = open(os.path.join(PICKLE_FOLDER , name + ' Classifier.pickle'), "rb")
         sms_classifier = pickle.load(classifier_s)
         classifier_s.close()
         
@@ -136,7 +136,5 @@ def classify_text(request):
     elif spam_msg >= normal_msg and spam_msg >= promo_msg:
         best_result = "spam"
         confidence = spam_msg / (normal_msg + promo_msg + spam_msg)
-
-        best_result = best_result + " | " + to_be_classified
 
     return HttpResponse(best_result)
