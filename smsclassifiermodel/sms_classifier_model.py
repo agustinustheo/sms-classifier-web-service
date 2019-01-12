@@ -8,12 +8,62 @@ PICKLE_FOLDER = os.path.join(STATIC_ROOT, 'sms_classifier_pickle')
 
 def classify_text(request):
     to_be_classified = request.GET.get('string')
+    
+    def convertAlay(text):
+        words = word_tokenize(text)
+        new_string = ''
+        for msg in words:
+            new_word = ''
+            alpha_flag = False
+            digit_flag = False
+            for c in msg:
+                if c.isalpha():
+                    alpha_flag = True
+                elif c.isdigit():
+                    digit_flag = True
+            
+            if alpha_flag and digit_flag:
+                msg = msg.lower()
+                if msg[-4:] != 'ribu' and msg[-3:] != 'rbu' and msg[-2:] != 'rb':
+                    for c in msg:
+                        if c == '1':
+                            c = 'i'
+                        elif c == '2':
+                            c = 's'
+                        elif c == '3':
+                            c = 'e'
+                        elif c == '4':
+                            c = 'a'
+                        elif c == '5':
+                            c = 's'
+                        elif c == '6':
+                            c = 'g'
+                        elif c == '7':
+                            c = 't'
+                        elif c == '8':
+                            c = 'b'
+                        elif c == '9':
+                            c = 'g'
+                        elif c == '0':
+                            c = 'o'
+                        new_word = new_word + c
+            
+            if new_word != '':
+                new_string = new_string + new_word + ' '
+            else:
+                new_string = new_string + msg + ' '
+
+        return new_string
+
     def preproccess_text(text_messages):
+        # Convert if text is "alay"
+        processed = convertAlay(text_messages)
+
         # change words to lower case - Hello, HELLO, hello are all the same word
-        processed = text_messages.lower()
+        processed = processed.lower()
 
         # Replace email addresses with 'almtemail'
-        processed = re.sub(r'^.+@[^\.].*\.[a-z]{2,}$', 'almtemail', processed)
+        processed = re.sub(r'^.+@[^\.].*\.[a-z]{2,}$', ' almtemail ', processed)
 
         # Replace URLs with 'almtweb'
         processed = re.sub(r'[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)', 'almtweb', processed)
@@ -56,16 +106,35 @@ def classify_text(request):
 
         return features
 
-    classifier_s = open(os.path.join(PICKLE_FOLDER , "sms_classifier.pickle"), "rb")
-    sms_classifier = pickle.load(classifier_s)
-    classifier_s.close()
+    # Define models to train
+    names = ["K Nearest Neighbors", "Decision Tree", "Random Forest", "Logistic Regression", "SGD Classifier",
+            "Naive Bayes", "SVM Linear"]
 
-    classified_text = sms_classifier.classify(find_features(preproccess_text(to_be_classified)))
-    if classified_text == 0:
-        classified_text = "normal"
-    elif classified_text == 1:
-        classified_text = "promo"
-    elif classified_text == 2:
-        classified_text = "spam"
+    normal_msg = 0
+    promo_msg = 0
+    spam_msg = 0
 
-    return HttpResponse(classified_text)
+    for name in names:
+        classifier_s = open(os.path.join(PICKLE_FOLDER , name + ' Classifier.pickle', "rb")
+        sms_classifier = pickle.load(classifier_s)
+        classifier_s.close()
+        
+        result = sms_classifier.classify(find_features(preproccess_text(to_be_classified)))
+        if result == 0:
+            normal_msg = normal_msg + 1
+        elif result == 1:
+            promo_msg = promo_msg + 1
+        elif result == 2:
+            spam_msg = spam_msg + 1
+        
+    if normal_msg >= promo_msg and normal_msg >= spam_msg:
+        best_result = "normal"
+        confidence = normal_msg / (normal_msg + promo_msg + spam_msg)
+    elif promo_msg >= normal_msg and promo_msg >= spam_msg:
+        best_result = "promo"
+        confidence = promo_msg / (normal_msg + promo_msg + spam_msg)
+    elif spam_msg >= normal_msg and spam_msg >= promo_msg:
+        best_result = "spam"
+        confidence = spam_msg / (normal_msg + promo_msg + spam_msg)
+
+    return HttpResponse(best_result)
