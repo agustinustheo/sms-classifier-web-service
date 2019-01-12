@@ -137,4 +137,6 @@ def classify_text(request):
         best_result = "spam"
         confidence = spam_msg / (normal_msg + promo_msg + spam_msg)
 
+        best_result = best_result + " | " + to_be_classified
+
     return HttpResponse(best_result)
