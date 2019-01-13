@@ -107,8 +107,7 @@ def classify_text(request):
         return features
 
     # Define models to train
-    names = ["K Nearest Neighbors", "Decision Tree", "Random Forest", "Logistic Regression", "SGD Classifier",
-            "Naive Bayes", "SVM Linear"]
+    names = ["SVM Linear"]
 
     normal_msg = 0
     promo_msg = 0
