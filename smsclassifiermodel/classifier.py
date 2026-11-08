@@ -3,7 +3,7 @@
 Preprocessing and features are the same as `preproccess_text` / `find_features` in
 github.com/agustinustheo/sms-classifier-model (the EIConCIT 2021 paper code).
 The model in `model/` is that repo's linear SVM trained on the full 4,125-message
-dataset (sms-classifier-model @ b0f81ef, scikit-learn 1.9.1).
+dataset (sms-classifier-model @ 753b682, scikit-learn 1.9.1).
 """
 
 import pickle

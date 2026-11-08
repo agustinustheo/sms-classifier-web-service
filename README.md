@@ -10,7 +10,7 @@ doi:[10.1109/EIConCIT50028.2021.9431859](https://doi.org/10.1109/EIConCIT50028.2
 ## Branches
 
 - **`master`**: modernised (Python 3.12, Django 6, uv, gunicorn).
-- **[`original`](../../tree/original)**: the service as it was in 2019 (Django 2.1, commit `1f85f7f`).
+- **[`original`](../../tree/original)**: the service as it was in 2019 (Django 2.1, commit `6ab9b8f`).
 
 ## Run
 
@@ -43,12 +43,21 @@ Production: `gunicorn smswebservice.wsgi` (see `Procfile`) with these environmen
 
 - `requirements.txt` (Django 2.1, scikit-learn 0.20 and 40 other pins) replaced by `pyproject.toml` + `uv.lock`.
 - The 2019 model pickles no longer load with current scikit-learn. They're replaced by the paper's model: the linear SVM
-  from `sms-classifier-model` (master @ `b0f81ef`, trained on all 4,125 messages), with its matching preprocessing and
+  from `sms-classifier-model` (master @ `753b682`, trained on all 4,125 messages), with its matching preprocessing and
   1,500-word vocabulary, in `smsclassifiermodel/classifier.py` and `smsclassifiermodel/model/`.
   scikit-learn is pinned to the version that made the pickle.
 - The model loads once per process instead of on every request. A missing `string` now returns 400.
 - `/classify/` is routed before the admin. Since Django 3.2 the admin's catch-all route would otherwise take it over.
-- The secret key, debug flag and allowed hosts come from environment variables. The old key was public in git, so treat it as compromised.
+- The secret key, debug flag and allowed hosts come from environment variables. The old key was also removed from the whole git history.
 - Removed: the bundled `nltk_data` (its `punkt` pickles are rejected by current NLTK; `punkt_tab` downloads on first use),
   `db.sqlite3`, `__pycache__` folders and the Heroku-specific host.
 - `Procfile` runs gunicorn instead of the development server.
+
+## License
+
+[CC BY-SA 4.0](LICENSE). If you use this work, please credit the authors and cite the [paper](https://doi.org/10.1109/EIConCIT50028.2021.9431859).
+
+## Repository history
+
+The whole history (including `original`) was rewritten in November 2026 to remove secrets, `db.sqlite3`, `__pycache__` folders and the third-party Tempo news corpus, and to mask phone numbers in the SMS data and to add the licence
+to every commit. Commit hashes before that date no longer exist.
