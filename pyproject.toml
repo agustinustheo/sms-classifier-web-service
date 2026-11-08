@@ -1,0 +1,17 @@
+[project]
+name = "sms-classifier-web-service"
+version = "2.0.0"
+description = "Web API classifying Indonesian SMS as normal, promo or spam"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "django>=5.2",
+    "gunicorn>=23",
+    "nltk>=3.9",
+    "numpy>=1.26",
+    # The bundled model is a pickle made with exactly this version; change both together.
+    "scikit-learn==1.9.1",
+]
+
+[tool.uv]
+package = false

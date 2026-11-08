@@ -1,7 +1,7 @@
 """smswebservice URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/2.1/topics/http/urls/
+    https://docs.djangoproject.com/en/stable/topics/http/urls/
 Examples:
 Function views
     1. Add an import:  from my_app import views
@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('', admin.site.urls),
+    # Must come before the admin: since Django 3.2 the admin has a catch-all route.
     path('classify/', include('smsclassifiermodel.urls')),
+    path('', admin.site.urls),
 ]

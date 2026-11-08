@@ -2,4 +2,5 @@ from django.apps import AppConfig
 
 
 class SmsclassifiermodelConfig(AppConfig):
-    name = 'smsclassifiermodel'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "smsclassifiermodel"
