@@ -3,7 +3,7 @@
 A web service containing an Indonesian SMS classifier model. It classifies SMS into 3 categories:
 normal message, promotional message and spam message. Built with Django.
 
-The model comes from [sms-classifier-model](https://github.com/agustinustheo/sms-classifier-model), the code for
+The model comes from [indonesian-sms-spam-filtering](https://github.com/agustinustheo/indonesian-sms-spam-filtering), the code for
 *SMS Spam Filtering using Machine Learning in Bahasa Indonesia* (EIConCIT 2021,
 doi:[10.1109/EIConCIT50028.2021.9431859](https://doi.org/10.1109/EIConCIT50028.2021.9431859)).
 
@@ -43,7 +43,7 @@ Production: `gunicorn smswebservice.wsgi` (see `Procfile`) with these environmen
 
 - `requirements.txt` (Django 2.1, scikit-learn 0.20 and 40 other pins) replaced by `pyproject.toml` + `uv.lock`.
 - The 2019 model pickles no longer load with current scikit-learn. They're replaced by the paper's model: the linear SVM
-  from `sms-classifier-model` (master @ `753b682`, trained on all 4,125 messages), with its matching preprocessing and
+  from `indonesian-sms-spam-filtering` (master @ `753b682`, trained on all 4,125 messages), with its matching preprocessing and
   1,500-word vocabulary, in `smsclassifiermodel/classifier.py` and `smsclassifiermodel/model/`.
   scikit-learn is pinned to the version that made the pickle.
 - The model loads once per process instead of on every request. A missing `string` now returns 400.
